@@ -1,0 +1,41 @@
+  tasks:
+  - name: provision ec2 instance on aws
+    ec2:
+      key_name: "mykey1122"
+      instance_type: "t2.micro"
+      image: "ami-0ebc1ac48dfd14136"
+      wait: true
+      count: 3
+      instance_tags:
+              Name: webserver
+      vpc_subnet_id: "subnet-859beec9"
+      assign_public_ip: yes
+      region: "ap-south-1"
+      state: present
+      group_id: "sg-0e08239d5c6c04317"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+    register: x
+  - debug:
+        var: x
+
+
+  - name: provision ec2 instance on aws by using ansible
+    ec2:
+      key_name: "mykey1122"
+      instance_type: "t2.micro"
+      image: "ami-0ebc1ac48dfd14136"
+      wait: true
+      count: 1
+      instance_tags:
+              Name: loadbalancer
+      vpc_subnet_id: "subnet-859beec9"
+      assign_public_ip: yes
+      region: "ap-south-1"
+      state: present
+      group_id: "sg-0e08239d5c6c04317"
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+    register: y
+  - debug:
+        var: y
