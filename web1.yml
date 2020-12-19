@@ -1,0 +1,47 @@
+- hosts: all
+  tasks:
+   - name: "Stopping the firewalld"
+     shell: systemctl stop firewalld
+   - name: "Stopping SElinux"
+     shell: setenforce 0
+
+
+- hosts: loadbalancer
+  vars_files:
+         var.yml
+
+  tasks:
+   - name: "Installing Haproxy"
+     package:
+        name: haproxy
+
+   - name: Copyinh haproxy config file"
+     template:
+        dest: "/etc/haproxy/haproxy.cfg"
+        src:  "/etc/haproxy/haproxy.cfg"
+
+   - name: Starting haproxy services
+     service:
+        name: "haproxy"
+        state: restarted
+
+- hosts: webserver
+  tasks:
+   - name: Installing Http package
+     package:
+        name: "httpd"
+
+
+   - name: Installing php packahe
+     package:
+        name: "php"
+        state: present
+
+   - name: copying the webpages
+     copy:
+        dest: "/var/www/html/index.php"
+        src: "web.php"
+   - name: Starting httpd
+     service:
+        name: "httpd"
+        state: restarted
